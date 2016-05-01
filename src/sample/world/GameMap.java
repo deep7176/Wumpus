@@ -21,6 +21,15 @@ public class GameMap {
 
     private GameMap() {
         grid = new Block[X_COUNT][Y_COUNT];
+        for(int x = 0; x < 4; x++){
+            for(int y = 0; y < 4; y++){
+                grid[x][y] = new Block(false);
+            }
+        }
+
+        grid[0][0] = new Block(true);
+        grid[0][1] = new Block(true);
+        grid[1][0] = new Block(true);
     }
 
     public static GameMap init(){
@@ -71,6 +80,7 @@ public class GameMap {
         int randX = randomNumberGen.nextInt(4 - 2) + 2;
         int randY = randomNumberGen.nextInt(4 - 2) + 2;
         Block b = grid[randX][randY];
+        //addItem(randX, randY, pit);
         //load breeze items perpendicular to Pit
         loadPerpendicular(randX, randY, new Breeze());
     }
@@ -82,21 +92,30 @@ public class GameMap {
         Wumpus wumpus = new Wumpus();
         int randX = randomNumberGen.nextInt(4 - 2) + 2;
         int randY = randomNumberGen.nextInt(4 - 2) + 2;
-        Block b = grid[randX][randY];
-        if(b.hasPit()){
-
-        }
+        addItem(randX, randY, wumpus);
         //load stench items perpendicular to Wumpus
         loadPerpendicular(randX, randY, new Stench());
     }
 
-    private boolean addItem(GamePiece piece){
-        boolean status = addItem(piece);
-        if(status){
-            return true;
-        }else{
+    private void addItem(int x, int y, GamePiece piece){
+        Block b = grid[x][y];
+        boolean pit = b.hasPit();
+        boolean gold = b.hasGold();
+        boolean wumpus = b.hasWumpus();
+        boolean couldAddPiece = b.addPiece(piece);
 
-            return false;
+        GamePiece.Type type = piece.getType();
+
+        while (!couldAddPiece){
+            x = randomNumberGen.nextInt(4);
+            y = randomNumberGen.nextInt(4);
+            b = grid[x][y];
+            pit = b.hasPit();
+            gold = b.hasGold();
+            wumpus = b.hasWumpus();
+            if(pit || gold || wumpus){
+                continue;
+            }
         }
     }
 

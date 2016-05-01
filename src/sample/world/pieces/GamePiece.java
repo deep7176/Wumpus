@@ -6,7 +6,7 @@ package sample.world.pieces;
  */
 public abstract class GamePiece {
 
-    enum Type{
+    public enum Type{
         PLAYER,
         PIT,
         BREEZE,

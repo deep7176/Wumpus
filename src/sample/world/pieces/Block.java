@@ -8,24 +8,46 @@ import java.util.List;
  * represents a block on the game map
  */
 public class Block implements Player.PlayerAction {
+    private final boolean IS_SAFE_BLOCK;
+
     static List<GamePiece> content = new ArrayList<>();
 
+    public Block(boolean isSafeBlock){
+        this.IS_SAFE_BLOCK = isSafeBlock;
+    }
+
     /**
-     * adds an item to the block
+     * adds an item to the block returns false if the block has a pit, gold, or wumpus
+     * @return  true if successfully added false if the piece cant be added because there is already a pit, gold, or wumpus
      * */
     public boolean addPiece(GamePiece piece){
+        boolean status = !IS_SAFE_BLOCK;
         if(isAdded(piece.getType())){
-            return false;
+            status = false;
         }
-        content.add(piece);
-        if(piece.getType() == GamePiece.Type.PLAYER){
-            ((Player) piece).action = this;
+
+        if(piece.getType() == GamePiece.Type.PIT ||
+                piece.getType() == GamePiece.Type.GOLD ||
+                    piece.getType() == GamePiece.Type.WUMPUS){
+            status = hasGold() ||
+                    hasPit() ||
+                    hasWumpus();
         }
-        return true;
+
+        if(status) {
+            content.add(piece);
+            if(piece.getType() == GamePiece.Type.PLAYER){
+                ((Player) piece).action = this;
+            }
+        }
+
+        return status;
     }
 
     /**
      * checks to see if the parameter is already added to the list of content on the block
+     * @param type type to check
+     * @return true if the type is already added to the block
      * */
     private boolean isAdded(GamePiece.Type type) {
         boolean check = false;
@@ -41,6 +63,9 @@ public class Block implements Player.PlayerAction {
     }
 
     public boolean hasPit(){
+        if(IS_SAFE_BLOCK){
+            return false;
+        }
         return isAdded(GamePiece.Type.PIT);
     }
 
@@ -49,6 +74,9 @@ public class Block implements Player.PlayerAction {
     }
 
     public boolean hasWumpus(){
+        if(IS_SAFE_BLOCK){
+            return false;
+        }
         return isAdded(GamePiece.Type.WUMPUS);
     }
 
@@ -57,6 +85,9 @@ public class Block implements Player.PlayerAction {
     }
 
     public boolean hasGold(){
+        if(IS_SAFE_BLOCK){
+            return false;
+        }
         return isAdded(GamePiece.Type.GOLD);
     }
 
