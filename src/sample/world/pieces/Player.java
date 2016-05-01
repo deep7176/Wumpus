@@ -6,6 +6,14 @@ package sample.world.pieces;
  */
 public class Player extends GamePiece{
 
+    public interface PlayerAction{
+        void onPercept();
+        void onGrab();
+        void onRelease();
+    }
+
+    PlayerAction action;
+
     private int arrow = 1;
 
     @Override
@@ -18,11 +26,15 @@ public class Player extends GamePiece{
     }
 
     public void grab(){
-        //TODO
+        if(action != null) {
+            action.onGrab();
+        }
     }
 
     public void release(){
-        //TODO
+        if(action != null) {
+            action.onRelease();
+        }
     }
 
 }
