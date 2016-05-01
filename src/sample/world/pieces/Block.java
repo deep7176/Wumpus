@@ -21,7 +21,7 @@ public class Block implements Player.PlayerAction {
      * @return  true if successfully added false if the piece cant be added because there is already a pit, gold, or wumpus
      * */
     public boolean addPiece(GamePiece piece){
-        boolean status = !IS_SAFE_BLOCK;
+        boolean status = true;
         if(isAdded(piece.getType())){
             status = false;
         }

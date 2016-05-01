@@ -64,11 +64,12 @@ public class GameMap {
         this.gold = new Gold();
         int randX = randomNumberGen.nextInt(4 - 2) + 2;
         int randY = randomNumberGen.nextInt(4 - 2) + 2;
-        grid[randX][randY].addPiece(gold);
+        Block b = grid[randX][randY];
+        b.addPiece(gold);
 
         //loads glitters items perpendicular to Gold
         Glitter glitter = new Glitter();
-        grid[randX][randY].addPiece(glitter);
+        b.addPiece(glitter);
 
     }
 
@@ -77,12 +78,18 @@ public class GameMap {
      * */
     private void loadPit() {
         Pit pit = new Pit();
-        int randX = randomNumberGen.nextInt(4 - 2) + 2;
-        int randY = randomNumberGen.nextInt(4 - 2) + 2;
-        Block b = grid[randX][randY];
-        //addItem(randX, randY, pit);
-        //load breeze items perpendicular to Pit
-        loadPerpendicular(randX, randY, new Breeze());
+        boolean couldAddPiece = false;
+
+        //try to add a pit to the block if it can't be added generate another point to add the block item
+        while (!couldAddPiece){
+            int randX = randomNumberGen.nextInt(4);
+            int randY = randomNumberGen.nextInt(4);
+            Block block = grid[randX][randY];
+            couldAddPiece = block.addPiece(pit);
+            if(couldAddPiece){
+                loadPerpendicular(randX, randY, new Breeze());
+            }
+        }
     }
 
     /**
@@ -90,39 +97,24 @@ public class GameMap {
      * */
     private void loadWumpus() {
         Wumpus wumpus = new Wumpus();
-        int randX = randomNumberGen.nextInt(4 - 2) + 2;
-        int randY = randomNumberGen.nextInt(4 - 2) + 2;
-        addItem(randX, randY, wumpus);
-        //load stench items perpendicular to Wumpus
-        loadPerpendicular(randX, randY, new Stench());
-    }
+        boolean couldAddPiece = false;
 
-    private void addItem(int x, int y, GamePiece piece){
-        Block b = grid[x][y];
-        boolean pit = b.hasPit();
-        boolean gold = b.hasGold();
-        boolean wumpus = b.hasWumpus();
-        boolean couldAddPiece = b.addPiece(piece);
-
-        GamePiece.Type type = piece.getType();
-
+        //try to add a wumpus to the block if it can't be added it generates more points to add the block item
         while (!couldAddPiece){
-            x = randomNumberGen.nextInt(4);
-            y = randomNumberGen.nextInt(4);
-            b = grid[x][y];
-            pit = b.hasPit();
-            gold = b.hasGold();
-            wumpus = b.hasWumpus();
-            if(pit || gold || wumpus){
-                continue;
+            int randX = randomNumberGen.nextInt(4);
+            int randY = randomNumberGen.nextInt(4);
+            Block block = grid[randX][randY];
+            couldAddPiece = block.addPiece(wumpus);
+            if(couldAddPiece){
+                loadPerpendicular(randX, randY, new Stench());
             }
         }
     }
 
     /**
      * adds the items that are supposed to be perpendicular to a Pit, Wumpus, and Gold
-     * @param centerX  x location of the Pit, Wumpus, and Gold
-     * @param centerY  y location of the Pit, Wumpus, and Gold
+     * @param centerX  x location of the Pit or Wumpus
+     * @param centerY  y location of the Pit or Wumpus
      * @param piece    piece to add to the map
      * */
     private void loadPerpendicular(int centerX, int centerY, GamePiece piece) {
