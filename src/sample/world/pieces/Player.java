@@ -6,6 +6,15 @@ package sample.world.pieces;
  */
 public class Player extends GamePiece{
 
+    private Position position = Position.UP;
+
+    public enum Position{
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    }
+
     public interface PlayerAction{
         void onPercept();
         void onGrab();
@@ -24,10 +33,30 @@ public class Player extends GamePiece{
         arrow = arrow - 1;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
     public void grab(){
         if(action != null) {
             action.onGrab();
         }
+    }
+
+    public void faceUp(){
+        this.position = Position.UP;
+    }
+
+    public void faceDown(){
+        this.position = Position.DOWN;
+    }
+
+    public void faceLeft(){
+        this.position = Position.LEFT;
+    }
+
+    public void faceRight(){
+        this.position = Position.RIGHT;
     }
 
 }
