@@ -13,30 +13,55 @@ public class Block implements Player.PlayerAction {
     /**
      * adds an item to the block
      * */
-    public void addPiece(GamePiece piece){
-        if(isAdded(piece)){
-            return;
+    public boolean addPiece(GamePiece piece){
+        if(isAdded(piece.getType())){
+            return false;
         }
         content.add(piece);
         if(piece.getType() == GamePiece.Type.PLAYER){
             ((Player) piece).action = this;
         }
+        return true;
     }
 
     /**
      * checks to see if the parameter is already added to the list of content on the block
      * */
-    private boolean isAdded(GamePiece piece) {
+    private boolean isAdded(GamePiece.Type type) {
         boolean check = false;
 
         for (GamePiece gamePiece : content) {
-            if(piece.getType() == gamePiece.getType()){
+            if(gamePiece.getType() == type){
                 check = true;
                 break;
             }
         }
 
         return check;
+    }
+
+    public boolean hasPit(){
+        return isAdded(GamePiece.Type.PIT);
+    }
+
+    public boolean hasBreeze(){
+        return isAdded(GamePiece.Type.BREEZE);
+    }
+
+    public boolean hasWumpus(){
+        return isAdded(GamePiece.Type.WUMPUS);
+    }
+
+    public boolean hasStench(){
+        return isAdded(GamePiece.Type.STENCH);
+    }
+
+    public boolean hasGold(){
+        return isAdded(GamePiece.Type.GOLD);
+    }
+
+    public boolean hasGlitter(){
+        return isAdded(GamePiece.Type.GLITTER);
     }
 
     /**
@@ -53,17 +78,8 @@ public class Block implements Player.PlayerAction {
 
     @Override
     public void onGrab() {
-        for (GamePiece gamePiece : content) {
-            if(gamePiece instanceof Gold){
-                Gold gold = ((Gold) gamePiece);
-
-
-            }
+        if(hasGold()){
+            System.out.println("You win!");
         }
-    }
-
-    @Override
-    public void onRelease() {
-
     }
 }

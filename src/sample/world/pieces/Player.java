@@ -9,7 +9,6 @@ public class Player extends GamePiece{
     public interface PlayerAction{
         void onPercept();
         void onGrab();
-        void onRelease();
     }
 
     PlayerAction action;
@@ -28,12 +27,6 @@ public class Player extends GamePiece{
     public void grab(){
         if(action != null) {
             action.onGrab();
-        }
-    }
-
-    public void release(){
-        if(action != null) {
-            action.onRelease();
         }
     }
 

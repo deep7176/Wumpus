@@ -35,16 +35,21 @@ public class GameMap {
         return map;
     }
 
+    public static Block[][] getGrid() {
+        return grid;
+    }
+
     /**
      * adds the Player to the map
      * */
     private void loadPlayer() {
         this.player = new Player();
-        grid[0][0].addPiece(player);
+        Block b = grid[0][0];
+        b.addPiece(player);
     }
 
     /**
-     * adds Gold to the map and also loads the Glitters to the map
+     * adds Gold to the map and also loads the Glitter to the map
      * */
     private void loadGold() {
         this.gold = new Gold();
@@ -53,7 +58,8 @@ public class GameMap {
         grid[randX][randY].addPiece(gold);
 
         //loads glitters items perpendicular to Gold
-        loadPerpendicular(randX, randY, new Glitter());
+        Glitter glitter = new Glitter();
+        grid[randX][randY].addPiece(glitter);
 
     }
 
@@ -61,14 +67,12 @@ public class GameMap {
      * adds Pits to the map and also loads the breezes to the map
      * */
     private void loadPit() {
-        for (int p = 0; p < 3; p++) {
-            Pit pit = new Pit();
-            int randX = randomNumberGen.nextInt(4 - 2) + 2;
-            int randY = randomNumberGen.nextInt(4 - 2) + 2;
-            grid[randX][randY].addPiece(pit);
-            //load breeze items perpendicular to Pit
-            loadPerpendicular(randX, randY, new Breeze());
-        }
+        Pit pit = new Pit();
+        int randX = randomNumberGen.nextInt(4 - 2) + 2;
+        int randY = randomNumberGen.nextInt(4 - 2) + 2;
+        Block b = grid[randX][randY];
+        //load breeze items perpendicular to Pit
+        loadPerpendicular(randX, randY, new Breeze());
     }
 
     /**
@@ -78,9 +82,22 @@ public class GameMap {
         Wumpus wumpus = new Wumpus();
         int randX = randomNumberGen.nextInt(4 - 2) + 2;
         int randY = randomNumberGen.nextInt(4 - 2) + 2;
-        grid[randX][randY].addPiece(wumpus);
+        Block b = grid[randX][randY];
+        if(b.hasPit()){
+
+        }
         //load stench items perpendicular to Wumpus
         loadPerpendicular(randX, randY, new Stench());
+    }
+
+    private boolean addItem(GamePiece piece){
+        boolean status = addItem(piece);
+        if(status){
+            return true;
+        }else{
+
+            return false;
+        }
     }
 
     /**
