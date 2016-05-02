@@ -8,9 +8,10 @@ import java.util.List;
  * represents a block on the game map
  */
 public class Block implements Player.PlayerAction {
+    //constant that states weather the block is a safe block or not
     private final boolean IS_SAFE_BLOCK;
 
-    static List<GamePiece> content = new ArrayList<>();
+    List<GamePiece> content = new ArrayList<>();
 
     public Block(boolean isSafeBlock){
         this.IS_SAFE_BLOCK = isSafeBlock;
@@ -98,8 +99,17 @@ public class Block implements Player.PlayerAction {
     /**
      * returns a list of the game pieces
      * */
-    public static List<GamePiece> getPieces() {
+    public List<GamePiece> getPieces() {
         return content;
+    }
+
+    /**
+     * moves the player to the next block and removes the player from the list of pieces
+     */
+    public void movePlayer(Block next) {
+        for (GamePiece gamePiece : content) {
+
+        }
     }
 
     @Override

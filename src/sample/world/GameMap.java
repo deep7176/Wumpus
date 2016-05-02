@@ -21,8 +21,8 @@ public class GameMap {
 
     private GameMap() {
         grid = new Block[X_COUNT][Y_COUNT];
-        for(int x = 0; x < 4; x++){
-            for(int y = 0; y < 4; y++){
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
                 grid[x][y] = new Block(false);
             }
         }
@@ -32,7 +32,7 @@ public class GameMap {
         grid[1][0] = new Block(true);
     }
 
-    public static GameMap init(){
+    public static GameMap init() {
         randomNumberGen = new Random();
 
         GameMap map = new GameMap();
@@ -50,7 +50,7 @@ public class GameMap {
 
     /**
      * adds the Player to the map
-     * */
+     */
     private void loadPlayer() {
         this.player = new Player();
         Block b = grid[0][0];
@@ -59,7 +59,7 @@ public class GameMap {
 
     /**
      * adds Gold to the map and also loads the Glitter to the map
-     * */
+     */
     private void loadGold() {
         this.gold = new Gold();
         int randX = randomNumberGen.nextInt(4 - 2) + 2;
@@ -75,18 +75,18 @@ public class GameMap {
 
     /**
      * adds Pits to the map and also loads the breezes to the map
-     * */
+     */
     private void loadPit() {
         Pit pit = new Pit();
         boolean couldAddPiece = false;
 
         //try to add a pit to the block if it can't be added generate another point to add the block item
-        while (!couldAddPiece){
+        while (!couldAddPiece) {
             int randX = randomNumberGen.nextInt(4);
             int randY = randomNumberGen.nextInt(4);
             Block block = grid[randX][randY];
             couldAddPiece = block.addPiece(pit);
-            if(couldAddPiece){
+            if (couldAddPiece) {
                 loadPerpendicular(randX, randY, new Breeze());
             }
         }
@@ -94,18 +94,18 @@ public class GameMap {
 
     /**
      * adds Wumpus to the map and also loads the stenches to the map
-     * */
+     */
     private void loadWumpus() {
         Wumpus wumpus = new Wumpus();
         boolean couldAddPiece = false;
 
         //try to add a wumpus to the block if it can't be added it generates more points to add the block item
-        while (!couldAddPiece){
+        while (!couldAddPiece) {
             int randX = randomNumberGen.nextInt(4);
             int randY = randomNumberGen.nextInt(4);
             Block block = grid[randX][randY];
             couldAddPiece = block.addPiece(wumpus);
-            if(couldAddPiece){
+            if (couldAddPiece) {
                 loadPerpendicular(randX, randY, new Stench());
             }
         }
@@ -113,46 +113,48 @@ public class GameMap {
 
     /**
      * adds the items that are supposed to be perpendicular to a Pit, Wumpus, and Gold
-     * @param centerX  x location of the Pit or Wumpus
-     * @param centerY  y location of the Pit or Wumpus
-     * @param piece    piece to add to the map
-     * */
+     *
+     * @param centerX x location of the Pit or Wumpus
+     * @param centerY y location of the Pit or Wumpus
+     * @param piece   piece to add to the map
+     */
     private void loadPerpendicular(int centerX, int centerY, GamePiece piece) {
         int x = centerX;
         int y = centerY + 1;
-        if(!isOutOfBounds(x) || !isOutOfBounds(y)){
+        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
             grid[x][y].addPiece(piece);
         }
 
         x = centerX;
         y = centerY - 1;
-        if(!isOutOfBounds(x) || !isOutOfBounds(y)){
+        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
             grid[x][y].addPiece(piece);
         }
 
         x = centerX + 1;
         y = centerY;
-        if(!isOutOfBounds(x) || !isOutOfBounds(y)){
+        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
             grid[x][y].addPiece(piece);
         }
 
         x = centerX - 1;
         y = centerY;
-        if(!isOutOfBounds(x) || !isOutOfBounds(y)){
+        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
             grid[x][y].addPiece(piece);
         }
     }
 
     /**
      * checks if the int is between 0 and 4
-     * @param value   value to check
+     *
+     * @param value value to check
      * @return true if value is 0 to 4
      */
-    private boolean isOutOfBounds(int value){
+    private boolean isOutOfBounds(int value) {
         return value >= 0 && value <= 4;
     }
 
-    public void readMap(){
+    public void readMap() {
 
     }
 
