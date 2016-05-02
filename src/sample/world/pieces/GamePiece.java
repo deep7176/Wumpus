@@ -6,6 +6,17 @@ package sample.world.pieces;
  */
 public abstract class GamePiece {
 
+    public abstract Type getType();
+
+    /**
+     * @return true if this class is a Wumpus, Gold, or Pit
+     */
+    public boolean isWGP() {
+        return getType() == Type.GOLD ||
+                getType() == Type.PIT ||
+                getType() == Type.WUMPUS;
+    }
+
     public enum Type{
         PLAYER,
         PIT,
@@ -15,6 +26,4 @@ public abstract class GamePiece {
         GLITTER,
         GOLD
     }
-
-    public abstract Type getType();
 }

@@ -12,10 +12,8 @@ public class GameMap {
 
     private static final int X_COUNT = 4;
     private static final int Y_COUNT = 4;
-
-    private static Block[][] grid;
     private static Random randomNumberGen;
-
+    private Block[][] grid;
     private Player player;
     private Gold gold;
 
@@ -44,7 +42,7 @@ public class GameMap {
         return map;
     }
 
-    public static Block[][] getGrid() {
+    public Block[][] getGrid() {
         return grid;
     }
 
@@ -52,18 +50,25 @@ public class GameMap {
      * adds the Player to the map
      */
     private void loadPlayer() {
+        System.out.print("Loading Player... ");
+
         this.player = new Player();
         Block b = grid[0][0];
         b.addPiece(player);
+
+        System.out.println("Done!");
     }
 
     /**
      * adds Gold to the map and also loads the Glitter to the map
      */
     private void loadGold() {
+        System.out.print("Loading Gold... ");
+
         this.gold = new Gold();
         int randX = randomNumberGen.nextInt(4 - 2) + 2;
         int randY = randomNumberGen.nextInt(4 - 2) + 2;
+        System.out.print("(" + randX + ":" + randY + ") ");
         Block b = grid[randX][randY];
         b.addPiece(gold);
 
@@ -71,12 +76,15 @@ public class GameMap {
         Glitter glitter = new Glitter();
         b.addPiece(glitter);
 
+        System.out.println("Done!");
     }
 
     /**
      * adds Pits to the map and also loads the breezes to the map
      */
     private void loadPit() {
+        System.out.print("Loading Pit... ");
+
         Pit pit = new Pit();
         boolean couldAddPiece = false;
 
@@ -87,15 +95,20 @@ public class GameMap {
             Block block = grid[randX][randY];
             couldAddPiece = block.addPiece(pit);
             if (couldAddPiece) {
+                System.out.print("(" + randX + ":" + randY + ") ");
                 loadPerpendicular(randX, randY, new Breeze());
             }
         }
+
+        System.out.println("Done!");
     }
 
     /**
      * adds Wumpus to the map and also loads the stenches to the map
      */
     private void loadWumpus() {
+        System.out.print("Loading Wumpus... ");
+
         Wumpus wumpus = new Wumpus();
         boolean couldAddPiece = false;
 
@@ -106,9 +119,12 @@ public class GameMap {
             Block block = grid[randX][randY];
             couldAddPiece = block.addPiece(wumpus);
             if (couldAddPiece) {
+                System.out.print("(" + randX + ":" + randY + ") ");
                 loadPerpendicular(randX, randY, new Stench());
             }
         }
+
+        System.out.println("Done!");
     }
 
     /**
@@ -118,44 +134,40 @@ public class GameMap {
      * @param centerY y location of the Pit or Wumpus
      * @param piece   piece to add to the map
      */
-    private void loadPerpendicular(int centerX, int centerY, GamePiece piece) {
+    private void loadPerpendicular(final int centerX, final int centerY, GamePiece piece) {
         int x = centerX;
         int y = centerY + 1;
-        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
+        if (inBounds(y) && inBounds(x)) {
             grid[x][y].addPiece(piece);
         }
 
         x = centerX;
         y = centerY - 1;
-        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
+        if (inBounds(y) && inBounds(x)) {
             grid[x][y].addPiece(piece);
         }
 
         x = centerX + 1;
         y = centerY;
-        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
+        if (inBounds(y) && inBounds(x)) {
             grid[x][y].addPiece(piece);
         }
 
         x = centerX - 1;
         y = centerY;
-        if (!isOutOfBounds(x) || !isOutOfBounds(y)) {
+        if (inBounds(y) && inBounds(x)) {
             grid[x][y].addPiece(piece);
         }
     }
 
     /**
-     * checks if the int is between 0 and 4
+     * checks if the int is between 0 and 3
      *
      * @param value value to check
-     * @return true if value is 0 to 4
+     * @return true if value is 0 to 3
      */
-    private boolean isOutOfBounds(int value) {
-        return value >= 0 && value <= 4;
-    }
-
-    public void readMap() {
-
+    private boolean inBounds(final int value) {
+        return (0 <= value) && (value < 4);
     }
 
 }

@@ -11,10 +11,11 @@ public class Block implements Player.PlayerAction {
     //constant that states weather the block is a safe block or not
     private final boolean IS_SAFE_BLOCK;
 
-    List<GamePiece> content = new ArrayList<>();
+    List<GamePiece> content;
 
     public Block(boolean isSafeBlock){
         this.IS_SAFE_BLOCK = isSafeBlock;
+        this.content = new ArrayList<>();
     }
 
     /**
@@ -24,25 +25,27 @@ public class Block implements Player.PlayerAction {
     public boolean addPiece(GamePiece piece){
         boolean status = true;
         if(isAdded(piece.getType())){
+            return false;
+        }
+
+        GamePiece.Type type = piece.getType();
+        if ((piece.isWGP() && this.hasWGP()) || (IS_SAFE_BLOCK && piece.isWGP())) {
             status = false;
         }
 
-        if(piece.getType() == GamePiece.Type.PIT ||
-                piece.getType() == GamePiece.Type.GOLD ||
-                    piece.getType() == GamePiece.Type.WUMPUS){
-            status = hasGold() ||
-                    hasPit() ||
-                    hasWumpus();
-        }
 
         if(status) {
-            content.add(piece);
+            this.content.add(piece);
             if(piece.getType() == GamePiece.Type.PLAYER){
                 ((Player) piece).action = this;
             }
         }
 
         return status;
+    }
+
+    private boolean hasWGP() {
+        return this.hasWumpus() || this.hasPit() || this.hasGold();
     }
 
     /**
@@ -53,7 +56,7 @@ public class Block implements Player.PlayerAction {
     private boolean isAdded(GamePiece.Type type) {
         boolean check = false;
 
-        for (GamePiece gamePiece : content) {
+        for (GamePiece gamePiece : this.content) {
             if(gamePiece.getType() == type){
                 check = true;
                 break;
@@ -64,36 +67,27 @@ public class Block implements Player.PlayerAction {
     }
 
     public boolean hasPit(){
-        if(IS_SAFE_BLOCK){
-            return false;
-        }
-        return isAdded(GamePiece.Type.PIT);
+        return this.isAdded(GamePiece.Type.PIT);
     }
 
     public boolean hasBreeze(){
-        return isAdded(GamePiece.Type.BREEZE);
+        return this.isAdded(GamePiece.Type.BREEZE);
     }
 
     public boolean hasWumpus(){
-        if(IS_SAFE_BLOCK){
-            return false;
-        }
-        return isAdded(GamePiece.Type.WUMPUS);
+        return this.isAdded(GamePiece.Type.WUMPUS);
     }
 
     public boolean hasStench(){
-        return isAdded(GamePiece.Type.STENCH);
+        return this.isAdded(GamePiece.Type.STENCH);
     }
 
     public boolean hasGold(){
-        if(IS_SAFE_BLOCK){
-            return false;
-        }
-        return isAdded(GamePiece.Type.GOLD);
+        return this.isAdded(GamePiece.Type.GOLD);
     }
 
     public boolean hasGlitter(){
-        return isAdded(GamePiece.Type.GLITTER);
+        return this.isAdded(GamePiece.Type.GLITTER);
     }
 
     /**
